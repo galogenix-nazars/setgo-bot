@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SETGO — Бриф</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       var(--tg-theme-bg-color,           #18181b);
+      --bg2:      var(--tg-theme-secondary-bg-color, #27272a);
+      --text:     var(--tg-theme-text-color,         #fafafa);
+      --hint:     var(--tg-theme-hint-color,         #71717a);
+      --accent:   #FF5733;
+      --accent2:  #FF8C42;
+      --radius:   14px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 90px;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      padding: 18px 20px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { font-size: 26px; font-weight: 900; letter-spacing: 5px; color: #fff; }
+    .logo-sub { font-size: 11px; color: rgba(255,255,255,.75); margin-top: 2px; font-weight: 400; }
+
+    /* ── PROGRESS ────────────────────────────── */
+    .progress-wrap { padding: 14px 20px 6px; }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--hint); margin-bottom: 8px;
+    }
+    .progress-meta strong { color: var(--text); }
+    .track {
+      height: 5px; background: var(--bg2); border-radius: 99px; overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 99px;
+      transition: width .45s cubic-bezier(.4,0,.2,1);
+    }
+    .dots {
+      display: flex; gap: 6px; margin-top: 10px;
+    }
+    .dot {
+      flex: 1; height: 3px; border-radius: 99px;
+      background: var(--bg2);
+      transition: background .3s;
+    }
+    .dot.done { background: var(--accent); }
+    .dot.active { background: var(--accent2); }
+
+    /* ── STEP ────────────────────────────────── */
+    .step { display: none; padding: 8px 20px 0; }
+    .step.active { display: block; animation: rise .35s ease; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-heading {
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 20px; margin-top: 4px;
+    }
+
+    /* ── QUESTION ────────────────────────────── */
+    .q { margin-bottom: 22px; }
+    .q-label {
+      font-size: 14px; font-weight: 600;
+      margin-bottom: 9px; display: flex; align-items: center; gap: 6px;
+    }
+    .q-hint { font-size: 12px; color: var(--hint); margin-bottom: 9px; }
+
+    /* ── TEXT INPUT ──────────────────────────── */
+    input[type=text], textarea {
+      width: 100%;
+      padding: 13px 14px;
+      background: var(--bg2);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+    input[type=text]:focus, textarea:focus { border-color: var(--accent); }
+    input[type=text]::placeholder, textarea::placeholder { color: var(--hint); }
+    textarea { resize: none; min-height: 78px; line-height: 1.5; }
+
+    /* ── CHIPS ───────────────────────────────── */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 9px 15px;
+      background: var(--bg2);
+      border: 1.5px solid transparent;
+      border-radius: 99px;
+      font-size: 14px; color: var(--text);
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chip.sel {
+      background: rgba(255,87,51,.12);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── PACKAGE CARDS ───────────────────────── */
+    .packages { display: flex; flex-direction: column; gap: 10px; }
+    .pkg {
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pkg.sel { border-color: var(--accent); background: rgba(255,87,51,.1); }
+    .pkg-row { display: flex; justify-content: space-between; align-items: center; }
+    .pkg-name { font-size: 16px; font-weight: 700; }
+    .pkg-price { font-size: 13px; color: var(--accent); font-weight: 600; }
+    .pkg-desc { font-size: 12px; color: var(--hint); margin-top: 4px; }
+
+    /* ── BOTTOM BAR ──────────────────────────── */
+    .bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      padding: 10px 16px 12px;
+      background: var(--bg);
+      border-top: 1px solid var(--bg2);
+      display: flex; gap: 10px;
+      z-index: 100;
+    }
+    .btn-back {
+      padding: 13px 18px;
+      background: var(--bg2); border: none; border-radius: var(--radius);
+      color: var(--text); font-size: 15px; font-family: var(--font);
+      cursor: pointer; transition: opacity .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-back:active { opacity: .7; }
+    .btn-next {
+      flex: 1; padding: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: var(--radius);
+      color: #fff; font-size: 16px; font-weight: 700;
+      font-family: var(--font); cursor: pointer;
+      transition: opacity .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-next:active { opacity: .85; }
+
+    /* ── SUCCESS ─────────────────────────────── */
+    .success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 32px 40px;
+      min-height: 70vh;
+    }
+    .success.show { display: flex; }
+    .success-icon { font-size: 72px; margin-bottom: 20px; }
+    .success-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    .success-sub {
+      font-size: 15px; color: var(--hint); line-height: 1.6; max-width: 260px;
+    }
+    .success-sub strong { color: var(--accent); }
+
+    /* ── DIVIDER ─────────────────────────────── */
+    .divider {
+      height: 1px; background: var(--bg2);
+      margin: 6px 0 22px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="logo">SETGO</div>
+    <div class="logo-sub">Выездная видеостудия · Москва и МО</div>
+  </div>
+  <div style="text-align:right;font-size:12px;color:rgba(255,255,255,.7);line-height:1.5;">
+    Выезд в день<br>обращения 🎬
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-meta">
+    <span>Блок <strong id="curBlock">1</strong> из 6</span>
+    <strong id="blockName">Контакты</strong>
+  </div>
+  <div class="track"><div class="fill" id="fill" style="width:16.7%"></div></div>
+  <div class="dots" id="dots"></div>
+</div>
+
+<!-- ── BLOCK 1: CONTACTS ──────────────────────────── -->
+<div class="step active" id="step-1">
+  <div class="step-heading">👤 Контакты</div>
+
+  <div class="q">
+    <div class="q-label">Как вас зовут?</div>
+    <input type="text" id="name" placeholder="Имя или название компании">
+  </div>
+  <div class="q">
+    <div class="q-label">📞 Телефон (WhatsApp / Telegram)</div>
+    <input type="text" id="phone" placeholder="+7 (999) 000-00-00">
+  </div>
+  <div class="q">
+    <div class="q-label">📧 Email</div>
+    <input type="text" id="email" placeholder="email@example.com  (или «нет»)">
+  </div>
+  <div class="q">
+    <div class="q-label">📱 Instagram / Telegram-канал</div>
+    <input type="text" id="social" placeholder="@username  (или «нет»)">
+  </div>
+</div>
+
+<!-- ── BLOCK 2: PROJECT ───────────────────────────── -->
+<div class="step" id="step-2">
+  <div class="step-heading">🎬 Проект</div>
+
+  <div class="q">
+    <div class="q-label">Что будем снимать?</div>
+    <div class="chips" id="project_type"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">🌐 Где будет опубликован контент?</div>
+    <div class="chips" id="project_platform"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">📊 Сколько роликов за сессию?</div>
+    <input type="text" id="project_quantity" placeholder="Например: 3">
+  </div>
+  <div class="q">
+    <div class="q-label">⏱ Хронометраж каждого ролика</div>
+    <div class="chips" id="project_duration"></div>
+  </div>
+</div>
+
+<!-- ── BLOCK 3: SHOOT ─────────────────────────────── -->
+<div class="step" id="step-3">
+  <div class="step-heading">📍 Съёмка</div>
+
+  <div class="q">
+    <div class="q-label">Адрес съёмки</div>
+    <input type="text" id="shoot_address" placeholder="Улица, дом  (или «наша локация — обсудим»)">
+  </div>
+  <div class="q">
+    <div class="q-label">📅 Желаемая дата и время</div>
+    <input type="text" id="shoot_date" placeholder="15 марта, 10:00  (или «как можно скорее»)">
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">🏠 Что есть на локации?</div>
+    <div class="chips" id="shoot_location"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">🎨 Предпочтение по фону</div>
+    <div class="chips" id="shoot_background"></div>
+  </div>
+</div>
+
+<!-- ── BLOCK 4: CONTENT ───────────────────────────── -->
+<div class="step" id="step-4">
+  <div class="step-heading">📝 Контент</div>
+
+  <div class="q">
+    <div class="q-label">Есть готовый текст / сценарий?</div>
+    <div class="chips" id="content_script"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">📺 Нужен телесуфлёр?</div>
+    <div class="chips" id="content_teleprompter"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">🎭 Стиль видео</div>
+    <div class="chips" id="content_style"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">🔗 Референсы</div>
+    <div class="q-hint">Ссылки на видео, которые вам нравятся, или краткое описание</div>
+    <textarea id="content_references" placeholder="https://...  или описание  (или «нет»)"></textarea>
+  </div>
+</div>
+
+<!-- ── BLOCK 5: POST ───────────────────────────────── -->
+<div class="step" id="step-5">
+  <div class="step-heading">✂️ Постпродакшн</div>
+
+  <div class="q">
+    <div class="q-label">Нужен монтаж?</div>
+    <div class="chips" id="post_editing"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">💬 Субтитры?</div>
+    <div class="chips" id="post_subtitles"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">⏰ Срок сдачи материала</div>
+    <div class="chips" id="post_deadline"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">📦 Формат сдачи</div>
+    <div class="chips" id="post_format"></div>
+  </div>
+</div>
+
+<!-- ── BLOCK 6: EXTRA ─────────────────────────────── -->
+<div class="step" id="step-6">
+  <div class="step-heading">💼 Пакет и бюджет</div>
+
+  <div class="q">
+    <div class="q-label">Интересующий пакет</div>
+    <div class="packages" id="extra_package"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">💰 Бюджет на проект</div>
+    <div class="chips" id="extra_budget"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">🔍 Как нашли SETGO?</div>
+    <div class="chips" id="extra_source"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="q">
+    <div class="q-label">💡 Пожелания / вопросы</div>
+    <textarea id="extra_wishes" placeholder="Любые дополнения  (или «нет»)"></textarea>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success" id="successScreen">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">Бриф отправлен!</div>
+  <div class="success-sub">
+    Наш менеджер свяжется с вами<br>
+    в течение <strong>15 минут</strong>.<br><br>
+    Спасибо, что выбрали SETGO!
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bar" id="bar">
+  <button class="btn-back" id="btnBack" style="display:none" onclick="prevStep()">← Назад</button>
+  <button class="btn-next" id="btnNext" onclick="nextStep()">Далее →</button>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+
+// ── DATA ──────────────────────────────────────────────
+const CHIPS = {
+  project_type:        ["Экспертное видео","Реклама","Интервью","Обзор","Курс","Стрим","Другое"],
+  project_platform:    ["YouTube","Instagram","TikTok","Telegram","Сайт","Внутреннее"],
+  project_duration:    ["до 1 мин","1–3 мин","3–10 мин","10–30 мин","более 30 мин"],
+  shoot_location:      ["Розетки 220В + место 3×3 м","Естественный свет","Мебель / интерьер","Пустое помещение","Всё привезёте"],
+  shoot_background:    ["Белый","Серый","Чёрный","Интерьер","Обсудим"],
+  content_script:      ["Да, полный","Тезисы","Нет","Нужна помощь с текстом"],
+  content_teleprompter:["Да","Скорее да","Нет, говорю свободно"],
+  content_style:       ["Строго","Живо","Динамично","Академично","Обсудим"],
+  post_editing:        ["Да (включён в пакет)","Да (отдельно)","Нет, только исходники"],
+  post_subtitles:      ["Да","Желательно","Нет"],
+  post_deadline:       ["В день съёмки","Завтра","3 дня","Неделя","Не срочно"],
+  post_format:         ["MP4 16:9","MP4 9:16","RAW-исходники","Google Drive","WeTransfer"],
+  extra_budget:        ["до 15 000 ₽","15–30 000 ₽","30–50 000 ₽","50 000+ ₽","Обсудим"],
+  extra_source:        ["Avito","Яндекс","Instagram","Telegram","Рекомендация","Другое"],
+};
+
+const PACKAGES = [
+  { id:"SOLO",     name:"SOLO",               price:"от 15 000 ₽", desc:"2 часа · 1 оператор" },
+  { id:"PRO",      name:"PRO",                price:"от 28 000 ₽", desc:"3 часа · 2 оператора · монтаж" },
+  { id:"BUSINESS", name:"BUSINESS",           price:"от 45 000 ₽", desc:"Полдня · 2 оператора · монтаж" },
+  { id:"STREAM",   name:"STREAM",             price:"от 20 000 ₽", desc:"Стрим-сет под ключ" },
+  { id:"help",     name:"Помогите выбрать",   price:"",            desc:"Подберём оптимальный вариант" },
+];
+
+const BLOCK_NAMES = ["Контакты","Проект","Съёмка","Контент","Постпродакшн","Пакеты"];
+let step = 1;
+const TOTAL = 6;
+
+// ── BUILD CHIPS ───────────────────────────────────────
+Object.entries(CHIPS).forEach(([id, opts]) => {
+  const wrap = document.getElementById(id);
+  if (!wrap) return;
+  opts.forEach(opt => {
+    const el = document.createElement('div');
+    el.className = 'chip';
+    el.textContent = opt;
+    el.dataset.v = opt;
+    el.addEventListener('click', () => {
+      wrap.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+      el.classList.add('sel');
+    });
+    wrap.appendChild(el);
+  });
+});
+
+// ── BUILD PACKAGES ────────────────────────────────────
+const pkgWrap = document.getElementById('extra_package');
+PACKAGES.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'pkg';
+  el.dataset.v = p.name;
+  el.innerHTML = `
+    <div class="pkg-row">
+      <span class="pkg-name">${p.name}</span>
+      ${p.price ? `<span class="pkg-price">${p.price}</span>` : ''}
+    </div>
+    <div class="pkg-desc">${p.desc}</div>`;
+  el.addEventListener('click', () => {
+    pkgWrap.querySelectorAll('.pkg').forEach(c => c.classList.remove('sel'));
+    el.classList.add('sel');
+  });
+  pkgWrap.appendChild(el);
+});
+
+// ── BUILD DOTS ────────────────────────────────────────
+const dotsEl = document.getElementById('dots');
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 1 ? ' active' : '');
+  d.id = `dot-${i}`;
+  dotsEl.appendChild(d);
+}
+
+// ── PROGRESS ──────────────────────────────────────────
+function updateProgress() {
+  const pct = (step / TOTAL) * 100;
+  document.getElementById('fill').style.width = pct + '%';
+  document.getElementById('curBlock').textContent = step;
+  document.getElementById('blockName').textContent = BLOCK_NAMES[step - 1];
+  document.getElementById('btnBack').style.display = step > 1 ? '' : 'none';
+  document.getElementById('btnNext').textContent =
+    step === TOTAL ? '🚀 Отправить бриф' : 'Далее →';
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    d.className = 'dot' + (i < step ? ' done' : i === step ? ' active' : '');
+  }
+}
+
+// ── NAVIGATION ────────────────────────────────────────
+function nextStep() {
+  if (step === TOTAL) { submit(); return; }
+  document.getElementById(`step-${step}`).classList.remove('active');
+  step++;
+  document.getElementById(`step-${step}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+}
+
+function prevStep() {
+  if (step === 1) return;
+  document.getElementById(`step-${step}`).classList.remove('active');
+  step--;
+  document.getElementById(`step-${step}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+}
+
+// ── READ VALUES ───────────────────────────────────────
+function v(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return el.value.trim() || '—';
+  const sel = el.querySelector('.sel');
+  return sel ? (sel.dataset.v || sel.querySelector('.pkg-name')?.textContent || '') : '—';
+}
+
+// ── SUBMIT ────────────────────────────────────────────
+function submit() {
+  const data = {
+    name: v('name'), phone: v('phone'), email: v('email'), social: v('social'),
+    project_type: v('project_type'), project_platform: v('project_platform'),
+    project_quantity: v('project_quantity'), project_duration: v('project_duration'),
+    shoot_address: v('shoot_address'), shoot_date: v('shoot_date'),
+    shoot_location: v('shoot_location'), shoot_background: v('shoot_background'),
+    content_script: v('content_script'), content_teleprompter: v('content_teleprompter'),
+    content_style: v('content_style'), content_references: v('content_references'),
+    post_editing: v('post_editing'), post_subtitles: v('post_subtitles'),
+    post_deadline: v('post_deadline'), post_format: v('post_format'),
+    extra_package: v('extra_package'), extra_budget: v('extra_budget'),
+    extra_source: v('extra_source'), extra_wishes: v('extra_wishes'),
+  };
+
+  tg.sendData(JSON.stringify(data));
+
+  document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('bar').style.display = 'none';
+  document.getElementById('successScreen').classList.add('show');
+
+  setTimeout(() => tg.close(), 3000);
+}
+
+updateProgress();
+</script>
+</body>
+</html>
