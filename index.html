@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SETGO — Выездная видеостудия · Москва и МО</title>
+  <meta name="description" content="Профессиональная выездная видеостудия SETGO. Приедем к вам в день обращения. 2 оператора, телесуфлёр, монтаж. Москва и МО.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:  #FF5733;
+      --accent2: #FF8C42;
+      --bg:      #18181b;
+      --bg2:     #27272a;
+      --bg3:     #1e1e21;
+      --text:    #fafafa;
+      --hint:    #a1a1aa;
+      --radius:  14px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ──────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(24,24,27,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+    }
+    .nav-logo { font-size: 22px; font-weight: 900; letter-spacing: 4px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-cta {
+      padding: 9px 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: 99px;
+      color: #fff; font-size: 14px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* ── HERO ─────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      padding: 100px 24px 60px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%,
+        rgba(255,87,51,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px;
+      background: rgba(255,87,51,.12);
+      border: 1px solid rgba(255,87,51,.3);
+      border-radius: 99px;
+      font-size: 13px; color: var(--accent2);
+      font-weight: 600; margin-bottom: 28px;
+    }
+    .hero-badge span { width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent); display: inline-block;
+      animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: .3; }
+    }
+    .hero h1 {
+      font-size: clamp(36px, 8vw, 72px);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 3vw, 20px);
+      color: var(--hint); max-width: 520px;
+      line-height: 1.6; margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: var(--radius);
+      color: #fff; font-size: 17px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: transform .2s, opacity .2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-2px); opacity: .92; }
+    .btn-secondary {
+      padding: 16px 32px;
+      background: var(--bg2); border: 1.5px solid rgba(255,255,255,.1);
+      border-radius: var(--radius);
+      color: var(--text); font-size: 17px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--accent); }
+
+    /* ── PHOTO PLACEHOLDER ────────────────────── */
+    .photo-placeholder {
+      width: 100%; max-width: 800px;
+      aspect-ratio: 16/9;
+      background: var(--bg2);
+      border: 2px dashed rgba(255,87,51,.3);
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; margin: 44px auto 0;
+      color: var(--hint); font-size: 15px;
+    }
+    .photo-placeholder .ph-icon { font-size: 40px; opacity: .5; }
+    .photo-placeholder-sm {
+      width: 100%; aspect-ratio: 4/3;
+      background: var(--bg2);
+      border: 2px dashed rgba(255,87,51,.25);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; color: var(--hint); font-size: 13px;
+    }
+    .photo-placeholder-sm .ph-icon { font-size: 28px; opacity: .4; }
+
+    /* ── STATS ────────────────────────────────── */
+    .stats {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 32px; padding: 60px 24px;
+      background: var(--bg2);
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: 42px; font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 14px; color: var(--hint); margin-top: 4px; }
+
+    /* ── SECTIONS ─────────────────────────────── */
+    section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      padding: 5px 14px;
+      background: rgba(255,87,51,.1);
+      border: 1px solid rgba(255,87,51,.2);
+      border-radius: 99px;
+      font-size: 12px; color: var(--accent2); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800; line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .section-sub { font-size: 17px; color: var(--hint); line-height: 1.6; max-width: 560px; }
+
+    /* ── WHAT WE BRING ────────────────────────── */
+    .equipment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px; margin-top: 44px;
+    }
+    .eq-card {
+      background: var(--bg2);
+      border: 1.5px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .2s, transform .2s;
+    }
+    .eq-card:hover { border-color: rgba(255,87,51,.4); transform: translateY(-3px); }
+    .eq-icon { font-size: 28px; margin-bottom: 12px; }
+    .eq-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .eq-desc { font-size: 13px; color: var(--hint); line-height: 1.5; }
+
+    /* ── HOW IT WORKS ─────────────────────────── */
+    .steps { display: flex; flex-direction: column; gap: 0; margin-top: 44px; }
+    .step-item {
+      display: flex; gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      position: relative;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900;
+    }
+    .step-body { padding-top: 8px; }
+    .step-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .step-desc { font-size: 15px; color: var(--hint); line-height: 1.6; }
+
+    /* ── PACKAGES ─────────────────────────────── */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px; margin-top: 44px;
+    }
+    .pkg-card {
+      background: var(--bg2);
+      border: 1.5px solid rgba(255,255,255,.07);
+      border-radius: 20px;
+      padding: 28px 24px;
+      display: flex; flex-direction: column;
+      transition: transform .2s, border-color .2s;
+    }
+    .pkg-card:hover { transform: translateY(-4px); border-color: rgba(255,87,51,.4); }
+    .pkg-card.featured {
+      border-color: var(--accent);
+      background: rgba(255,87,51,.06);
+      position: relative; overflow: hidden;
+    }
+    .pkg-card.featured::before {
+      content: 'Популярный';
+      position: absolute; top: 18px; right: -22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 32px;
+      transform: rotate(35deg);
+    }
+    .pkg-name { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+    .pkg-price {
+      font-size: 32px; font-weight: 900; margin: 12px 0 4px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .pkg-duration { font-size: 13px; color: var(--hint); margin-bottom: 20px; }
+    .pkg-features { list-style: none; flex: 1; }
+    .pkg-features li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 14px; line-height: 1.5;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .pkg-features li:last-child { border-bottom: none; }
+    .pkg-features li::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .pkg-for { font-size: 12px; color: var(--hint); margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.06); }
+    .pkg-cta {
+      margin-top: 20px;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: var(--radius);
+      color: #fff; font-size: 15px; font-weight: 700;
+      cursor: pointer; text-decoration: none; text-align: center;
+      transition: opacity .2s; display: block;
+    }
+    .pkg-cta:hover { opacity: .85; }
+    .pkg-cta.outline {
+      background: transparent;
+      border: 1.5px solid rgba(255,87,51,.5);
+      color: var(--accent);
+    }
+    .pkg-cta.outline:hover { background: rgba(255,87,51,.08); }
+
+    /* ── ZONES ────────────────────────────────── */
+    .zones-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 40px; margin-top: 44px; align-items: start;
+    }
+    @media (max-width: 640px) { .zones-wrap { grid-template-columns: 1fr; } }
+    .zone-map {
+      aspect-ratio: 1;
+      background: var(--bg2);
+      border: 2px dashed rgba(255,87,51,.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--hint); text-align: center;
+      padding: 20px; position: relative;
+    }
+    .zone-list { display: flex; flex-direction: column; gap: 12px; }
+    .zone-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px;
+      background: var(--bg2); border-radius: var(--radius);
+      border-left: 3px solid var(--accent);
+    }
+    .zone-item:nth-child(2) { border-left-color: var(--accent2); }
+    .zone-item:nth-child(3) { border-left-color: #FFA570; }
+    .zone-item:nth-child(4) { border-left-color: rgba(255,87,51,.3); }
+    .zone-label { font-size: 15px; font-weight: 600; }
+    .zone-sub { font-size: 12px; color: var(--hint); margin-top: 2px; }
+    .zone-price { font-size: 15px; font-weight: 700; color: var(--accent); text-align: right; }
+
+    /* ── GALLERY ──────────────────────────────── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px; margin-top: 44px;
+    }
+    @media (max-width: 600px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+    .gallery-grid .photo-placeholder-sm:first-child {
+      grid-column: span 2; aspect-ratio: 16/9;
+    }
+
+    /* ── WHY US ───────────────────────────────── */
+    .why-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px; margin-top: 44px;
+    }
+    .why-card {
+      background: var(--bg2);
+      border: 1.5px solid rgba(255,255,255,.07);
+      border-radius: var(--radius); padding: 24px;
+    }
+    .why-icon { font-size: 32px; margin-bottom: 14px; }
+    .why-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .why-desc { font-size: 14px; color: var(--hint); line-height: 1.6; }
+
+    /* ── CTA SECTION ──────────────────────────── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(255,87,51,.15), rgba(255,140,66,.1));
+      border: 1px solid rgba(255,87,51,.2);
+      border-radius: 24px;
+      padding: 60px 40px;
+      text-align: center;
+      margin: 0 auto 80px;
+      max-width: 700px;
+    }
+    .cta-section h2 { margin-bottom: 14px; }
+    .cta-section p { color: var(--hint); font-size: 17px; margin-bottom: 32px; line-height: 1.6; }
+
+    /* ── FOOTER ───────────────────────────────── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-logo { font-size: 28px; font-weight: 900; letter-spacing: 5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .footer-sub { font-size: 14px; color: var(--hint); margin-bottom: 24px; }
+    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a {
+      font-size: 14px; color: var(--hint); text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 12px; color: rgba(161,161,170,.5); margin-top: 24px; }
+
+    /* ── RESPONSIVE ───────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 12px 16px; }
+      .hero { padding: 90px 16px 50px; }
+      section { padding: 60px 16px; }
+      .cta-section { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SETGO</div>
+  <a href="https://t.me/setgo_brief_bot" target="_blank" class="nav-cta">Оставить заявку</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <span></span> Выезд в день обращения · Москва и МО
+  </div>
+  <h1>Студия<br>приедет <span class="grad">к вам</span></h1>
+  <p class="hero-sub">
+    Профессиональная видеостудия с 2 операторами, светом, телесуфлёром и монтажом —
+    прямо на вашу локацию. Готовы выехать сегодня.
+  </p>
+  <div class="hero-btns">
+    <a href="https://t.me/setgo_brief_bot" target="_blank" class="btn-primary">
+      🎬 Заполнить бриф
+    </a>
+    <a href="#packages" class="btn-secondary">
+      📦 Посмотреть пакеты
+    </a>
+  </div>
+  <div class="photo-placeholder">
+    <div class="ph-icon">📸</div>
+    <div>Здесь будет фото студии в работе</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">2</div>
+    <div class="stat-label">оператора в команде</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">45–60</div>
+    <div class="stat-label">минут на установку</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">15</div>
+    <div class="stat-label">минут — ответим на бриф</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">0</div>
+    <div class="stat-label">рублей за выезд по Москве</div>
+  </div>
+</div>
+
+<!-- EQUIPMENT -->
+<section id="equipment">
+  <div class="section-tag">Оборудование</div>
+  <h2>Всё привезём с собой</h2>
+  <p class="section-sub">Ничего не нужно арендовать или готовить. Мы приезжаем с полным комплектом.</p>
+  <div class="equipment-grid">
+    <div class="eq-card">
+      <div class="eq-icon">🎥</div>
+      <div class="eq-name">2 профессиональные камеры</div>
+      <div class="eq-desc">Снимаем с двух точек — больше динамики и страховка на случай брака</div>
+    </div>
+    <div class="eq-card">
+      <div class="eq-icon">💡</div>
+      <div class="eq-name">Студийный свет — 3 точки</div>
+      <div class="eq-desc">LED-панели, мягкий рассеянный свет, профессиональная постановка</div>
+    </div>
+    <div class="eq-card">
+      <div class="eq-icon">📺</div>
+      <div class="eq-name">Телесуфлёр</div>
+      <div class="eq-desc">Говорите в камеру, не заучивая текст. Скорость съёмки вырастает в 2–3 раза</div>
+    </div>
+    <div class="eq-card">
+      <div class="eq-icon">🎙️</div>
+      <div class="eq-name">Микрофоны</div>
+      <div class="eq-desc">Петличный + накамерный. Чистый звук без шумов помещения</div>
+    </div>
+    <div class="eq-card">
+      <div class="eq-icon">🖼️</div>
+      <div class="eq-name">Фон на выбор</div>
+      <div class="eq-desc">Белый, серый, чёрный — профессиональные тканевые фоны в комплекте</div>
+    </div>
+    <div class="eq-card">
+      <div class="eq-icon">✂️</div>
+      <div class="eq-name">Монтаж</div>
+      <div class="eq-desc">Входит в пакеты PRO и BUSINESS. Субтитры, цветокоррекция, сдача в нужном формате</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background: var(--bg2); max-width: 100%; padding: 80px 24px;">
+  <div style="max-width: 700px; margin: 0 auto;">
+    <div class="section-tag">Как это работает</div>
+    <h2>Четыре шага<br>до готового видео</h2>
+    <div class="steps">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Заполняете бриф</div>
+          <div class="step-desc">Удобная форма в Telegram — 3 минуты. Указываете тип видео, адрес, дату и желаемый пакет.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Мы связываемся за 15 минут</div>
+          <div class="step-desc">Уточняем детали, подтверждаем дату и время. Готовы выехать в день обращения.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Приезжаем и устанавливаем студию</div>
+          <div class="step-desc">Полная установка занимает 45–60 минут. Настраиваем свет, звук, телесуфлёр — и начинаем.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Получаете готовый материал</div>
+          <div class="step-desc">RAW-исходники или смонтированное видео — в тот же день или по вашему сроку. Google Drive или WeTransfer.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="packages">
+  <div class="section-tag">Пакеты</div>
+  <h2>Выберите свой формат</h2>
+  <p class="section-sub">Все пакеты включают выезд по Москве, установку оборудования и работу операторов.</p>
+  <div class="packages-grid">
+
+    <div class="pkg-card">
+      <div class="pkg-name">SOLO</div>
+      <div class="pkg-price">от 15 000 ₽</div>
+      <div class="pkg-duration">2 часа · 1 оператор</div>
+      <ul class="pkg-features">
+        <li>1 камера</li>
+        <li>Свет — 2 точки</li>
+        <li>Петличный микрофон</li>
+        <li>Телесуфлёр</li>
+        <li>RAW-исходники</li>
+      </ul>
+      <div class="pkg-for">🎯 Эксперты, коучи, Reels</div>
+      <a href="https://t.me/setgo_brief_bot" target="_blank" class="pkg-cta outline">Выбрать SOLO</a>
+    </div>
+
+    <div class="pkg-card featured">
+      <div class="pkg-name">PRO</div>
+      <div class="pkg-price">от 28 000 ₽</div>
+      <div class="pkg-duration">3 часа · 2 оператора</div>
+      <ul class="pkg-features">
+        <li>2 камеры</li>
+        <li>Свет — 3 точки</li>
+        <li>2 микрофона</li>
+        <li>Телесуфлёр + фон</li>
+        <li>Монтаж включён</li>
+        <li>Субтитры по желанию</li>
+      </ul>
+      <div class="pkg-for">🎯 Интервью, реклама, YouTube</div>
+      <a href="https://t.me/setgo_brief_bot" target="_blank" class="pkg-cta">Выбрать PRO</a>
+    </div>
+
+    <div class="pkg-card">
+      <div class="pkg-name">BUSINESS</div>
+      <div class="pkg-price">от 45 000 ₽</div>
+      <div class="pkg-duration">Полдня · 2 оператора</div>
+      <ul class="pkg-features">
+        <li>2 камеры</li>
+        <li>Полный световой сет</li>
+        <li>До 3 локаций</li>
+        <li>Монтаж включён</li>
+        <li>Договор и закрывающие документы</li>
+      </ul>
+      <div class="pkg-for">🎯 Корпоративные клиенты, серия роликов</div>
+      <a href="https://t.me/setgo_brief_bot" target="_blank" class="pkg-cta outline">Выбрать BUSINESS</a>
+    </div>
+
+    <div class="pkg-card">
+      <div class="pkg-name">STREAM</div>
+      <div class="pkg-price">от 20 000 ₽</div>
+      <div class="pkg-duration">Прямой эфир / вебинар</div>
+      <ul class="pkg-features">
+        <li>Захват в OBS</li>
+        <li>Свет + звук</li>
+        <li>Управление трансляцией</li>
+        <li>Резервная запись</li>
+      </ul>
+      <div class="pkg-for">🎯 Онлайн-мероприятия, вебинары</div>
+      <a href="https://t.me/setgo_brief_bot" target="_blank" class="pkg-cta outline">Выбрать STREAM</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" style="background: var(--bg3); max-width: 100%; padding: 80px 24px;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-tag">Портфолио</div>
+    <h2>Наши работы</h2>
+    <p class="section-sub">Примеры съёмок — скоро здесь появятся реальные кейсы.</p>
+    <div class="gallery-grid">
+      <div class="photo-placeholder-sm" style="grid-column: span 2; aspect-ratio: 16/9;">
+        <div class="ph-icon">🎬</div>
+        <div>Кейс: интервью с экспертом</div>
+      </div>
+      <div class="photo-placeholder-sm">
+        <div class="ph-icon">📸</div>
+        <div>Кейс: реклама продукта</div>
+      </div>
+      <div class="photo-placeholder-sm">
+        <div class="ph-icon">📸</div>
+        <div>Кейс: YouTube-ролик</div>
+      </div>
+      <div class="photo-placeholder-sm">
+        <div class="ph-icon">📸</div>
+        <div>Бэкстейдж</div>
+      </div>
+      <div class="photo-placeholder-sm">
+        <div class="ph-icon">📸</div>
+        <div>Бэкстейдж</div>
+      </div>
+      <div class="photo-placeholder-sm">
+        <div class="ph-icon">📸</div>
+        <div>Оборудование</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ZONES -->
+<section id="zones">
+  <div class="section-tag">Зоны выезда</div>
+  <h2>Работаем по всей Москве и МО</h2>
+  <p class="section-sub">Выезд по МКАД включён в стоимость. За МКАД — небольшая доплата.</p>
+  <div class="zones-wrap">
+    <div class="zone-map">
+      <div>
+        <div style="font-size:48px; margin-bottom: 8px;">🗺️</div>
+        Здесь будет<br>карта зон выезда
+      </div>
+    </div>
+    <div class="zone-list">
+      <div class="zone-item">
+        <div>
+          <div class="zone-label">Зона А — Москва в пределах МКАД</div>
+          <div class="zone-sub">Любой адрес в границах МКАД</div>
+        </div>
+        <div class="zone-price">Включено</div>
+      </div>
+      <div class="zone-item">
+        <div>
+          <div class="zone-label">Зона Б — МО до 30 км от МКАД</div>
+          <div class="zone-sub">Ближнее Подмосковье</div>
+        </div>
+        <div class="zone-price">+ 2 000 ₽</div>
+      </div>
+      <div class="zone-item">
+        <div>
+          <div class="zone-label">Зона В — МО 30–60 км от МКАД</div>
+          <div class="zone-sub">Дальнее Подмосковье</div>
+        </div>
+        <div class="zone-price">+ 4 000 ₽</div>
+      </div>
+      <div class="zone-item">
+        <div>
+          <div class="zone-label">Свыше 60 км</div>
+          <div class="zone-sub">Другие регионы</div>
+        </div>
+        <div class="zone-price">По договорённости</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why" style="background: var(--bg2); max-width: 100%; padding: 80px 24px;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-tag">Почему SETGO</div>
+    <h2>Наши преимущества</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <div class="why-title">Выезд в день обращения</div>
+        <div class="why-desc">Не нужно ждать неделями. Заполнили бриф утром — снимаем уже сегодня.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">👥</div>
+        <div class="why-title">2 оператора</div>
+        <div class="why-desc">Двойная скорость и надёжность. Если один снимает — второй контролирует звук и свет.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📺</div>
+        <div class="why-title">Телесуфлёр</div>
+        <div class="why-desc">Говорите свободно, глядя в камеру. Экономит 30–50% времени съёмки.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📄</div>
+        <div class="why-title">Документы и договор</div>
+        <div class="why-desc">Работаем официально. Договор, акты выполненных работ — всё для вашей бухгалтерии.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🎨</div>
+        <div class="why-title">Монтаж включён</div>
+        <div class="why-desc">В пакетах PRO и BUSINESS монтаж уже в цене. Цветокоррекция, субтитры, нужный формат.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⏱️</div>
+        <div class="why-title">Ответим за 15 минут</div>
+        <div class="why-desc">Заполнили бриф — ждите звонка. Работаем быстро, уважаем ваше время.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding: 80px 24px;">
+  <div class="cta-section">
+    <div class="section-tag">Начнём?</div>
+    <h2>Снимем ваше видео<br>уже сегодня</h2>
+    <p>Заполните короткий бриф в Telegram — 3 минуты. Наш менеджер свяжется с вами и согласует детали.</p>
+    <a href="https://t.me/setgo_brief_bot" target="_blank" class="btn-primary" style="font-size:18px; padding: 18px 40px; display: inline-flex;">
+      🎬 Заполнить бриф
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SETGO</div>
+  <div class="footer-sub">Выездная видеостудия · Москва и МО · выезд в день обращения</div>
+  <div class="footer-links">
+    <a href="#equipment">Оборудование</a>
+    <a href="#packages">Пакеты</a>
+    <a href="#zones">Зоны выезда</a>
+    <a href="https://t.me/setgo_brief_bot" target="_blank">Telegram</a>
+  </div>
+  <div class="footer-copy">© 2026 SETGO. Все права защищены.</div>
+</footer>
+
+</body>
+</html>
